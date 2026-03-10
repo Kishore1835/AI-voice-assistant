@@ -1,0 +1,814 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #6aab73;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">tkinter </span><span class="s0">as </span><span class="s1">tk</span>
+<span class="s0">from </span><span class="s1">PIL </span><span class="s0">import </span><span class="s1">Image</span><span class="s2">, </span><span class="s1">ImageTk</span><span class="s2">, </span><span class="s1">ImageDraw</span>
+<span class="s0">import </span><span class="s1">pyttsx3 </span><span class="s0">as </span><span class="s1">p</span>
+<span class="s0">import </span><span class="s1">speech_recognition </span><span class="s0">as </span><span class="s1">sr</span>
+<span class="s0">import </span><span class="s1">subprocess</span>
+<span class="s0">import </span><span class="s1">pyautogui</span>
+<span class="s0">import </span><span class="s1">selenium_w</span>
+<span class="s0">from </span><span class="s1">selenium_w </span><span class="s0">import </span><span class="s1">infow</span>
+<span class="s0">from </span><span class="s1">datetime </span><span class="s0">import </span><span class="s1">datetime</span>
+<span class="s0">from </span><span class="s1">googletrans </span><span class="s0">import </span><span class="s1">Translator</span>
+<span class="s0">from </span><span class="s1">tkinter </span><span class="s0">import </span><span class="s1">messagebox</span>
+<span class="s0">from </span><span class="s1">tkinter </span><span class="s0">import </span><span class="s1">Label</span><span class="s2">, </span><span class="s1">Toplevel</span><span class="s2">,</span><span class="s1">Entry</span><span class="s2">,</span><span class="s1">Button</span><span class="s2">,</span><span class="s1">OptionMenu</span><span class="s2">,</span><span class="s1">StringVar</span>
+<span class="s0">import </span><span class="s1">time</span>
+<span class="s0">import </span><span class="s1">threading</span>
+<span class="s0">import </span><span class="s1">random</span>
+<span class="s0">import </span><span class="s1">logging</span>
+<span class="s0">import </span><span class="s1">pyttsx3</span>
+<span class="s0">import </span><span class="s1">webbrowser</span>
+<span class="s0">from </span><span class="s1">tkinter </span><span class="s0">import </span><span class="s1">scrolledtext</span>
+<span class="s0">import </span><span class="s1">math</span>
+
+
+<span class="s3"># Define paths for system applications</span>
+<span class="s1">CONTROL_PANEL_COMMAND </span><span class="s2">= </span><span class="s4">'C:</span><span class="s0">\\</span><span class="s4">Windows</span><span class="s0">\\</span><span class="s4">System32</span><span class="s0">\\</span><span class="s4">control.exe'</span>
+<span class="s1">CALCULATOR_COMMAND </span><span class="s2">= </span><span class="s4">'C:</span><span class="s0">\\</span><span class="s4">Windows</span><span class="s0">\\</span><span class="s4">System32</span><span class="s0">\\</span><span class="s4">calc.exe'</span>
+<span class="s1">THIS_PC_COMMAND </span><span class="s2">= </span><span class="s4">'C:</span><span class="s0">\\</span><span class="s4">Windows</span><span class="s0">\\</span><span class="s4">System32</span><span class="s0">\\</span><span class="s4">explorer.exe'</span>
+<span class="s1">COMMAND_PROMPT </span><span class="s2">= </span><span class="s4">'C:</span><span class="s0">\\</span><span class="s4">Windows</span><span class="s0">\\</span><span class="s4">System32</span><span class="s0">\\</span><span class="s4">cmd.exe'</span>
+
+<span class="s3"># Initialize text-to-speech engine globally</span>
+<span class="s1">engine </span><span class="s2">= </span><span class="s1">p</span><span class="s2">.</span><span class="s1">init</span><span class="s2">()</span>
+<span class="s1">users_db </span><span class="s2">= {</span><span class="s4">&quot;admin&quot;</span><span class="s2">: </span><span class="s4">&quot;1234&quot;</span><span class="s2">}</span>
+
+
+<span class="s0">def </span><span class="s1">recognize_speech</span><span class="s2">(</span><span class="s1">recognizer</span><span class="s2">=</span><span class="s0">None</span><span class="s2">):</span>
+    <span class="s0">if </span><span class="s1">recognizer </span><span class="s0">is None</span><span class="s2">:</span>
+        <span class="s1">recognizer </span><span class="s2">= </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Recognizer</span><span class="s2">()  </span><span class="s3"># Or however you initialize your recognizer</span>
+
+    <span class="s3"># Your voice recognition code goes here, using the provided recognizer</span>
+    <span class="s3"># For example:</span>
+    <span class="s1">print</span><span class="s2">(</span><span class="s4">&quot;Listening for speech...&quot;</span><span class="s2">)</span>
+    <span class="s0">with </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Microphone</span><span class="s2">() </span><span class="s0">as </span><span class="s1">source</span><span class="s2">:</span>
+        <span class="s1">audio </span><span class="s2">= </span><span class="s1">recognizer</span><span class="s2">.</span><span class="s1">listen</span><span class="s2">(</span><span class="s1">source</span><span class="s2">)</span>
+    <span class="s0">try</span><span class="s2">:</span>
+        <span class="s1">text </span><span class="s2">= </span><span class="s1">recognizer</span><span class="s2">.</span><span class="s1">recognize_google</span><span class="s2">(</span><span class="s1">audio</span><span class="s2">)</span>
+        <span class="s0">return </span><span class="s1">text</span>
+    <span class="s0">except</span><span class="s2">:</span>
+        <span class="s0">return None</span>
+
+<span class="s0">def </span><span class="s1">typing_effect</span><span class="s2">(</span><span class="s1">text_widget</span><span class="s2">, </span><span class="s1">text</span><span class="s2">, </span><span class="s1">tag</span><span class="s2">, </span><span class="s1">delay</span><span class="s2">=</span><span class="s5">0.05</span><span class="s2">):</span>
+    <span class="s1">text_widget</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(</span><span class="s4">'1.0'</span><span class="s2">, </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">)</span>
+    <span class="s0">for </span><span class="s1">char </span><span class="s0">in </span><span class="s1">text</span><span class="s2">:</span>
+        <span class="s1">text_widget</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s1">char</span><span class="s2">, </span><span class="s1">tag</span><span class="s2">)</span>
+        <span class="s1">text_widget</span><span class="s2">.</span><span class="s1">update</span><span class="s2">()</span>
+        <span class="s1">time</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s1">delay</span><span class="s2">)</span>
+
+<span class="s0">def </span><span class="s1">create_input_window</span><span class="s2">(</span><span class="s1">platform_name</span><span class="s2">, </span><span class="s1">callback</span><span class="s2">):</span>
+    <span class="s1">window </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Tk</span><span class="s2">()</span>
+    <span class="s1">window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">f&quot;Search on </span><span class="s0">{</span><span class="s1">platform_name</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+
+    <span class="s1">logo_label </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Label</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s1">platform_name</span><span class="s2">)  </span><span class="s3"># Replace this with an image logo if needed</span>
+    <span class="s1">logo_label</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s1">entry </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">50</span><span class="s2">)</span>
+    <span class="s1">entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">submit_action</span><span class="s2">():</span>
+        <span class="s1">input_text </span><span class="s2">= </span><span class="s1">entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+        <span class="s0">if </span><span class="s1">input_text</span><span class="s2">:</span>
+            <span class="s1">callback</span><span class="s2">(</span><span class="s1">input_text</span><span class="s2">)</span>
+            <span class="s1">window</span><span class="s2">.</span><span class="s1">destroy</span><span class="s2">()</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showwarning</span><span class="s2">(</span><span class="s4">&quot;Input Error&quot;</span><span class="s2">, </span><span class="s4">&quot;Please enter a search topic.&quot;</span><span class="s2">)</span>
+
+    <span class="s1">submit_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Submit&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">submit_action</span><span class="s2">)</span>
+    <span class="s1">submit_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s4">&quot;left&quot;</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s1">recognizer </span><span class="s2">= </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Recognizer</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">mic_action</span><span class="s2">():</span>
+        <span class="s1">spoken_text </span><span class="s2">= </span><span class="s1">recognize_speech</span><span class="s2">(</span><span class="s1">recognizer</span><span class="s2">)</span>
+        <span class="s1">entry</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">)</span>
+        <span class="s1">entry</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">spoken_text</span><span class="s2">)</span>
+
+    <span class="s1">mic_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;🎤&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">mic_action</span><span class="s2">)</span>
+    <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s4">&quot;right&quot;</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s1">window</span><span class="s2">.</span><span class="s1">mainloop</span><span class="s2">()</span>
+
+
+
+
+<span class="s0">def </span><span class="s1">perform_calculation</span><span class="s2">(</span><span class="s1">expression</span><span class="s2">):</span>
+    <span class="s0">try</span><span class="s2">:</span>
+        <span class="s3"># Handle special calculations</span>
+        <span class="s0">if </span><span class="s4">'log' </span><span class="s0">in </span><span class="s1">expression</span><span class="s2">:</span>
+            <span class="s1">result </span><span class="s2">= </span><span class="s1">eval</span><span class="s2">(</span><span class="s1">expression</span><span class="s2">.</span><span class="s1">replace</span><span class="s2">(</span><span class="s4">'log'</span><span class="s2">, </span><span class="s4">'math.log'</span><span class="s2">))</span>
+        <span class="s0">elif </span><span class="s4">'^' </span><span class="s0">in </span><span class="s1">expression</span><span class="s2">:</span>
+            <span class="s1">base</span><span class="s2">, </span><span class="s1">exp </span><span class="s2">= </span><span class="s1">expression</span><span class="s2">.</span><span class="s1">split</span><span class="s2">(</span><span class="s4">'^'</span><span class="s2">)</span>
+            <span class="s1">result </span><span class="s2">= </span><span class="s1">math</span><span class="s2">.</span><span class="s1">pow</span><span class="s2">(</span><span class="s1">float</span><span class="s2">(</span><span class="s1">base</span><span class="s2">), </span><span class="s1">float</span><span class="s2">(</span><span class="s1">exp</span><span class="s2">))</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">result </span><span class="s2">= </span><span class="s1">eval</span><span class="s2">(</span><span class="s1">expression</span><span class="s2">)  </span><span class="s3"># Perform the calculation</span>
+        <span class="s0">return </span><span class="s4">f&quot;The result is: </span><span class="s0">{</span><span class="s1">result</span><span class="s0">}</span><span class="s4">&quot;</span>
+    <span class="s0">except </span><span class="s1">Exception </span><span class="s0">as </span><span class="s1">e</span><span class="s2">:</span>
+        <span class="s0">return </span><span class="s4">f&quot;Error: </span><span class="s0">{</span><span class="s1">str</span><span class="s2">(</span><span class="s1">e</span><span class="s2">)</span><span class="s0">}</span><span class="s4">&quot;</span>
+
+
+<span class="s0">def </span><span class="s1">on_microphone_click</span><span class="s2">(</span><span class="s1">text_box</span><span class="s2">, </span><span class="s1">recognizer</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">recognize_speech</span><span class="s2">():</span>
+        <span class="s0">try</span><span class="s2">:</span>
+            <span class="s0">with </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Microphone</span><span class="s2">() </span><span class="s0">as </span><span class="s1">source</span><span class="s2">:</span>
+                <span class="s1">print</span><span class="s2">(</span><span class="s4">&quot;Listening...&quot;</span><span class="s2">)</span>
+                <span class="s1">audio </span><span class="s2">= </span><span class="s1">recognizer</span><span class="s2">.</span><span class="s1">listen</span><span class="s2">(</span><span class="s1">source</span><span class="s2">)</span>
+                <span class="s1">text </span><span class="s2">= </span><span class="s1">recognizer</span><span class="s2">.</span><span class="s1">recognize_google</span><span class="s2">(</span><span class="s1">audio</span><span class="s2">)</span>
+                <span class="s1">text_box</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">)  </span><span class="s3"># Clear the text box</span>
+                <span class="s1">text_box</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">text</span><span class="s2">)  </span><span class="s3"># Insert recognized text into the text box</span>
+        <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">UnknownValueError</span><span class="s2">:</span>
+            <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showerror</span><span class="s2">(</span><span class="s4">&quot;Error&quot;</span><span class="s2">, </span><span class="s4">&quot;Could not understand audio&quot;</span><span class="s2">)</span>
+        <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">RequestError</span><span class="s2">:</span>
+            <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showerror</span><span class="s2">(</span><span class="s4">&quot;Error&quot;</span><span class="s2">, </span><span class="s4">&quot;Could not request results from Google Speech Recognition service&quot;</span><span class="s2">)</span>
+
+    <span class="s1">recognize_speech</span><span class="s2">()</span>
+
+
+<span class="s0">def </span><span class="s1">on_submit_click</span><span class="s2">(</span><span class="s1">text_box</span><span class="s2">):</span>
+    <span class="s1">expression </span><span class="s2">= </span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+    <span class="s3"># Perform calculation</span>
+    <span class="s1">result </span><span class="s2">= </span><span class="s1">perform_calculation</span><span class="s2">(</span><span class="s1">expression</span><span class="s2">)</span>
+
+    <span class="s3"># Show result in Calculator app</span>
+    <span class="s1">open_calculator_and_input</span><span class="s2">(</span><span class="s1">expression</span><span class="s2">)</span>
+
+    <span class="s3"># Update UI</span>
+    <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showinfo</span><span class="s2">(</span><span class="s4">&quot;Result&quot;</span><span class="s2">, </span><span class="s1">result</span><span class="s2">)</span>
+
+
+<span class="s0">def </span><span class="s1">open_calculator_and_input</span><span class="s2">(</span><span class="s1">expression</span><span class="s2">):</span>
+    <span class="s3"># Open Calculator</span>
+    <span class="s1">subprocess</span><span class="s2">.</span><span class="s1">Popen</span><span class="s2">(</span><span class="s4">'calc.exe'</span><span class="s2">, </span><span class="s1">shell</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
+
+    <span class="s3"># Wait for the Calculator to open</span>
+    <span class="s1">time</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s5">2</span><span class="s2">)</span>
+
+    <span class="s3"># Simulate typing the expression into the Calculator</span>
+    <span class="s1">pyautogui</span><span class="s2">.</span><span class="s1">typewrite</span><span class="s2">(</span><span class="s1">expression</span><span class="s2">)</span>
+    <span class="s1">pyautogui</span><span class="s2">.</span><span class="s1">press</span><span class="s2">(</span><span class="s4">'enter'</span><span class="s2">)</span>
+
+
+<span class="s0">def </span><span class="s1">create_calculator_window</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">, </span><span class="s1">recognizer</span><span class="s2">):</span>
+    <span class="s1">window </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Tk</span><span class="s2">()</span>
+    <span class="s1">window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Calculator&quot;</span><span class="s2">)</span>
+
+    <span class="s1">label </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Label</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Enter calculation:&quot;</span><span class="s2">)</span>
+    <span class="s1">label</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s1">text_box </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">50</span><span class="s2">)</span>
+    <span class="s1">text_box</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">mic_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;🎙️&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s0">lambda</span><span class="s2">: </span><span class="s1">on_microphone_click</span><span class="s2">(</span><span class="s1">text_box</span><span class="s2">, </span><span class="s1">recognizer</span><span class="s2">))</span>
+    <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">submit_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Submit&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s0">lambda</span><span class="s2">: </span><span class="s1">on_submit_click</span><span class="s2">(</span><span class="s1">text_box</span><span class="s2">))</span>
+    <span class="s1">submit_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">window</span><span class="s2">.</span><span class="s1">mainloop</span><span class="s2">()</span>
+
+<span class="s0">def </span><span class="s1">create_round_image</span><span class="s2">(</span><span class="s1">image_path</span><span class="s2">, </span><span class="s1">size</span><span class="s2">):</span>
+    <span class="s0">try</span><span class="s2">:</span>
+        <span class="s1">image </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">open</span><span class="s2">(</span><span class="s1">image_path</span><span class="s2">).</span><span class="s1">convert</span><span class="s2">(</span><span class="s4">&quot;RGBA&quot;</span><span class="s2">)</span>
+        <span class="s1">image </span><span class="s2">= </span><span class="s1">image</span><span class="s2">.</span><span class="s1">resize</span><span class="s2">((</span><span class="s1">size</span><span class="s2">, </span><span class="s1">size</span><span class="s2">), </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">LANCZOS</span><span class="s2">)</span>
+        <span class="s1">mask </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">new</span><span class="s2">(</span><span class="s4">'L'</span><span class="s2">, (</span><span class="s1">size</span><span class="s2">, </span><span class="s1">size</span><span class="s2">), </span><span class="s5">0</span><span class="s2">)</span>
+        <span class="s1">draw </span><span class="s2">= </span><span class="s1">ImageDraw</span><span class="s2">.</span><span class="s1">Draw</span><span class="s2">(</span><span class="s1">mask</span><span class="s2">)</span>
+        <span class="s1">draw</span><span class="s2">.</span><span class="s1">ellipse</span><span class="s2">((</span><span class="s5">0</span><span class="s2">, </span><span class="s5">0</span><span class="s2">, </span><span class="s1">size</span><span class="s2">, </span><span class="s1">size</span><span class="s2">), </span><span class="s1">fill</span><span class="s2">=</span><span class="s5">255</span><span class="s2">)</span>
+        <span class="s1">result </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">new</span><span class="s2">(</span><span class="s4">'RGBA'</span><span class="s2">, (</span><span class="s1">size</span><span class="s2">, </span><span class="s1">size</span><span class="s2">))</span>
+        <span class="s1">result</span><span class="s2">.</span><span class="s1">paste</span><span class="s2">(</span><span class="s1">image</span><span class="s2">, (</span><span class="s5">0</span><span class="s2">, </span><span class="s5">0</span><span class="s2">), </span><span class="s1">mask</span><span class="s2">)</span>
+        <span class="s0">return </span><span class="s1">ImageTk</span><span class="s2">.</span><span class="s1">PhotoImage</span><span class="s2">(</span><span class="s1">result</span><span class="s2">)</span>
+    <span class="s0">except </span><span class="s1">Exception </span><span class="s0">as </span><span class="s1">e</span><span class="s2">:</span>
+        <span class="s1">logging</span><span class="s2">.</span><span class="s1">error</span><span class="s2">(</span><span class="s4">f&quot;Error creating round image: </span><span class="s0">{</span><span class="s1">e</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+        <span class="s0">return None</span>
+
+<span class="s0">def </span><span class="s1">tell_time_and_date</span><span class="s2">():</span>
+    <span class="s1">now </span><span class="s2">= </span><span class="s1">datetime</span><span class="s2">.</span><span class="s1">now</span><span class="s2">()</span>
+    <span class="s1">current_time </span><span class="s2">= </span><span class="s1">now</span><span class="s2">.</span><span class="s1">strftime</span><span class="s2">(</span><span class="s4">&quot;%H:%M&quot;</span><span class="s2">)</span>
+    <span class="s1">current_date </span><span class="s2">= </span><span class="s1">now</span><span class="s2">.</span><span class="s1">strftime</span><span class="s2">(</span><span class="s4">&quot;%Y-%m-%d&quot;</span><span class="s2">)</span>
+    <span class="s0">return </span><span class="s4">f&quot;The current time is </span><span class="s0">{</span><span class="s1">current_time</span><span class="s0">} </span><span class="s4">and today's date is </span><span class="s0">{</span><span class="s1">current_date</span><span class="s0">}</span><span class="s4">.&quot;</span>
+
+<span class="s0">def </span><span class="s1">wait_for_ready</span><span class="s2">(</span><span class="s1">r</span><span class="s2">,</span><span class="s1">update_ui_callback</span><span class="s2">):</span>
+        <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Ready detected. You can proceed.&quot;</span><span class="s2">)</span>
+
+<span class="s0">def </span><span class="s1">generate_meeting_link</span><span class="s2">():</span>
+    <span class="s1">base_url </span><span class="s2">= </span><span class="s4">&quot;https://meet.jit.si/&quot; </span><span class="s3"># Replace with your Daily.co subdomain</span>
+    <span class="s1">unique_room_name </span><span class="s2">= </span><span class="s4">f&quot;Room</span><span class="s0">{</span><span class="s1">random</span><span class="s2">.</span><span class="s1">randint</span><span class="s2">(</span><span class="s5">1000</span><span class="s2">, </span><span class="s5">9999</span><span class="s2">)</span><span class="s0">}</span><span class="s4">&quot;</span>
+    <span class="s0">return </span><span class="s4">f&quot;</span><span class="s0">{</span><span class="s1">base_url</span><span class="s0">}{</span><span class="s1">unique_room_name</span><span class="s0">}</span><span class="s4">&quot;</span>
+
+
+<span class="s0">def </span><span class="s1">start_captioning</span><span class="s2">(</span><span class="s1">root</span><span class="s2">):</span>
+    <span class="s3"># Create a new Toplevel window for captions</span>
+    <span class="s1">caption_window </span><span class="s2">= </span><span class="s1">Toplevel</span><span class="s2">(</span><span class="s1">root</span><span class="s2">)</span>
+    <span class="s1">caption_window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Live Captions&quot;</span><span class="s2">)</span>
+    <span class="s1">caption_window</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">(</span><span class="s4">&quot;600x100&quot;</span><span class="s2">)</span>
+
+    <span class="s3"># Keep the caption window always on top</span>
+    <span class="s1">caption_window</span><span class="s2">.</span><span class="s1">attributes</span><span class="s2">(</span><span class="s4">&quot;-topmost&quot;</span><span class="s2">, </span><span class="s0">True</span><span class="s2">)</span>
+
+    <span class="s3"># Label to show live captions</span>
+    <span class="s1">caption_label </span><span class="s2">= </span><span class="s1">Label</span><span class="s2">(</span><span class="s1">caption_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Captions will appear here...&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Playfair Display&quot;</span><span class="s2">, </span><span class="s5">12</span><span class="s2">), </span><span class="s1">wraplength</span><span class="s2">=</span><span class="s5">300</span><span class="s2">)</span>
+    <span class="s1">caption_label</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">20</span><span class="s2">)</span>
+
+    <span class="s3"># Function to capture and display speech as text</span>
+    <span class="s1">recognizer </span><span class="s2">= </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Recognizer</span><span class="s2">()</span>
+    <span class="s0">def </span><span class="s1">update_caption</span><span class="s2">():</span>
+        <span class="s0">if not </span><span class="s1">caption_window</span><span class="s2">.</span><span class="s1">winfo_exists</span><span class="s2">():  </span><span class="s3"># Check if the window still exists</span>
+            <span class="s0">return  </span><span class="s3"># Exit if the window is closed</span>
+
+        <span class="s0">with </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Microphone</span><span class="s2">() </span><span class="s0">as </span><span class="s1">source</span><span class="s2">:</span>
+            <span class="s1">caption_label</span><span class="s2">.</span><span class="s1">config</span><span class="s2">(</span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Listening...&quot;</span><span class="s2">)  </span><span class="s3"># Update if the window is active</span>
+            <span class="s0">try</span><span class="s2">:</span>
+                <span class="s1">audio </span><span class="s2">= </span><span class="s1">recognizer</span><span class="s2">.</span><span class="s1">listen</span><span class="s2">(</span><span class="s1">source</span><span class="s2">)</span>
+                <span class="s1">text </span><span class="s2">= </span><span class="s1">recognizer</span><span class="s2">.</span><span class="s1">recognize_google</span><span class="s2">(</span><span class="s1">audio</span><span class="s2">)</span>
+                <span class="s1">caption_label</span><span class="s2">.</span><span class="s1">config</span><span class="s2">(</span><span class="s1">text</span><span class="s2">=</span><span class="s4">f&quot;Caption: </span><span class="s0">{</span><span class="s1">text</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">UnknownValueError</span><span class="s2">:</span>
+                <span class="s0">if </span><span class="s1">caption_label</span><span class="s2">.</span><span class="s1">winfo_exists</span><span class="s2">():  </span><span class="s3"># Check if label still exists</span>
+                    <span class="s1">caption_label</span><span class="s2">.</span><span class="s1">config</span><span class="s2">(</span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Could not understand audio&quot;</span><span class="s2">)</span>
+            <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">RequestError</span><span class="s2">:</span>
+                <span class="s0">if </span><span class="s1">caption_label</span><span class="s2">.</span><span class="s1">winfo_exists</span><span class="s2">():  </span><span class="s3"># Check if label still exists</span>
+                    <span class="s1">caption_label</span><span class="s2">.</span><span class="s1">config</span><span class="s2">(</span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Error with the speech recognition service&quot;</span><span class="s2">)</span>
+
+            <span class="s3"># Schedule the next caption update if window is still open</span>
+        <span class="s0">if </span><span class="s1">caption_window</span><span class="s2">.</span><span class="s1">winfo_exists</span><span class="s2">():</span>
+            <span class="s1">caption_window</span><span class="s2">.</span><span class="s1">after</span><span class="s2">(</span><span class="s5">2000</span><span class="s2">, </span><span class="s1">update_caption</span><span class="s2">)  </span><span class="s3"># Adjust interval as needed</span>
+
+            <span class="s3"># Start capturing and updating captions</span>
+        <span class="s1">update_caption</span><span class="s2">()</span>
+
+<span class="s0">def </span><span class="s1">handle_task</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">, </span><span class="s1">stop_main_mic</span><span class="s2">, </span><span class="s1">input_text</span><span class="s2">=</span><span class="s0">None</span><span class="s2">, </span><span class="s1">user_input</span><span class="s2">=</span><span class="s0">None</span><span class="s2">):</span>
+    <span class="s0">while True</span><span class="s2">:  </span><span class="s3"># Continuously wait for input until an exit command is given</span>
+        <span class="s1">query </span><span class="s2">= </span><span class="s1">user_input </span><span class="s0">if </span><span class="s1">user_input </span><span class="s0">else </span><span class="s1">recognize_speech</span><span class="s2">()</span>
+        <span class="s1">print</span><span class="s2">(</span><span class="s4">f&quot;Final query: </span><span class="s0">{</span><span class="s1">query</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+
+        <span class="s0">if not </span><span class="s1">query</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: I'm sorry, I couldn't understand that. Could you please type your query or try speaking again?&quot;</span><span class="s2">)</span>
+            <span class="s0">continue  </span><span class="s3"># Ask again if no valid input</span>
+
+        <span class="s3"># Display the user query</span>
+        <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;User: </span><span class="s0">{</span><span class="s1">query</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+        <span class="s1">query_lower </span><span class="s2">= </span><span class="s1">query</span><span class="s2">.</span><span class="s1">lower</span><span class="s2">()  </span><span class="s3"># Convert to lowercase for easier keyword matching</span>
+
+        <span class="s3"># Task-specific commands based on keywords</span>
+        <span class="s0">if </span><span class="s4">&quot;calculator&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening Calculator.&quot;</span><span class="s2">)</span>
+            <span class="s1">subprocess</span><span class="s2">.</span><span class="s1">Popen</span><span class="s2">(</span><span class="s4">&quot;calc.exe&quot;</span><span class="s2">, </span><span class="s1">shell</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s4">&quot;control panel&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening Control Panel.&quot;</span><span class="s2">)</span>
+            <span class="s1">subprocess</span><span class="s2">.</span><span class="s1">Popen</span><span class="s2">(</span><span class="s4">&quot;control&quot;</span><span class="s2">, </span><span class="s1">shell</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s4">&quot;game&quot; </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">or </span><span class="s4">&quot;games&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening the game website for you.&quot;</span><span class="s2">)</span>
+            <span class="s1">assist </span><span class="s2">= </span><span class="s1">infow</span><span class="s2">()</span>
+            <span class="s1">assist</span><span class="s2">.</span><span class="s1">play_online_game</span><span class="s2">()</span>
+        <span class="s0">elif </span><span class="s4">&quot;voice to text&quot; </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">or </span><span class="s4">&quot;speech to text&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening voice-to-text converter.&quot;</span><span class="s2">)</span>
+            <span class="s1">open_voice_to_text_window</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s4">&quot;file explorer&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening File Explorer.&quot;</span><span class="s2">)</span>
+            <span class="s1">subprocess</span><span class="s2">.</span><span class="s1">Popen</span><span class="s2">(</span><span class="s4">&quot;explorer&quot;</span><span class="s2">, </span><span class="s1">shell</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s4">&quot;weather&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening weather information window.&quot;</span><span class="s2">)</span>
+            <span class="s1">open_weather_window</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s4">&quot;news&quot; </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">or </span><span class="s4">&quot;headline&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Fetching today's news headlines.&quot;</span><span class="s2">)</span>
+            <span class="s0">try</span><span class="s2">:</span>
+                <span class="s1">assist </span><span class="s2">= </span><span class="s1">infow</span><span class="s2">()</span>
+                <span class="s1">headlines </span><span class="s2">= </span><span class="s1">assist</span><span class="s2">.</span><span class="s1">get_news_headlines</span><span class="s2">()</span>
+                <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">headlines </span><span class="s0">if </span><span class="s1">headlines </span><span class="s0">else </span><span class="s4">'No news headlines found.'</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s0">except </span><span class="s1">Exception </span><span class="s0">as </span><span class="s1">e</span><span class="s2">:</span>
+                <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: An error occurred while fetching the news.&quot;</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s4">&quot;list&quot; </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">and </span><span class="s2">(</span><span class="s4">&quot;tasks&quot; </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">or </span><span class="s4">&quot;task&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">):</span>
+            <span class="s1">tasks_list </span><span class="s2">= (</span>
+                <span class="s4">&quot;Nova:</span><span class="s0">\n</span><span class="s4">1. BROWSER Search.</span><span class="s0">\n</span><span class="s4">2. Video Call.</span><span class="s0">\n</span><span class="s4">3. YouTube.</span><span class="s0">\n</span><span class="s4">4. News.</span><span class="s0">\n</span><span class="s4">&quot;</span>
+                <span class="s4">&quot;5. Control Panel Access.</span><span class="s0">\n</span><span class="s4">6. File Explorer.</span><span class="s0">\n</span><span class="s4">7. Voice-to-Text Converter.</span><span class="s0">\n</span><span class="s4">&quot;</span>
+                <span class="s4">&quot;8. Calculator.</span><span class="s0">\n</span><span class="s4">9. Online Games.</span><span class="s0">\n</span><span class="s4">10. Weather Report.</span><span class="s0">\n</span><span class="s4">11.Set Reminders. </span><span class="s0">\n</span><span class="s4">12.Translator&quot;</span>
+            <span class="s2">)</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s1">tasks_list</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s4">&quot;youtube&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">video_prompt </span><span class="s2">= </span><span class="s4">&quot;What video would you like to play?&quot;</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">video_prompt</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+
+            <span class="s0">def </span><span class="s1">youtube_callback</span><span class="s2">(</span><span class="s1">topic</span><span class="s2">):</span>
+                <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;User: </span><span class="s0">{</span><span class="s1">topic</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+                <span class="s1">play_prompt </span><span class="s2">= </span><span class="s4">f&quot;Playing a video about </span><span class="s0">{</span><span class="s1">topic</span><span class="s0">} </span><span class="s4">on YouTube.&quot;</span>
+                <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">play_prompt</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+
+                <span class="s1">assist </span><span class="s2">= </span><span class="s1">infow</span><span class="s2">()</span>
+                <span class="s0">if </span><span class="s1">assist</span><span class="s2">.</span><span class="s1">play_youtube_video</span><span class="s2">(</span><span class="s1">topic</span><span class="s2">):</span>
+                    <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Video playing completed.&quot;</span><span class="s2">)</span>
+                    <span class="s0">return </span><span class="s1">handle_task</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">)</span>
+
+            <span class="s1">create_input_window</span><span class="s2">(</span><span class="s4">&quot;YouTube&quot;</span><span class="s2">, </span><span class="s1">youtube_callback</span><span class="s2">)</span>
+
+        <span class="s0">elif </span><span class="s4">&quot;translate&quot; </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">or </span><span class="s4">&quot;translator&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">stop_main_mic</span><span class="s2">()</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening translation window.&quot;</span><span class="s2">)</span>
+            <span class="s1">open_translation_window</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">)</span>
+
+
+        <span class="s0">elif </span><span class="s4">&quot;set reminder&quot; </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">or </span><span class="s4">&quot;set alarm&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">stop_main_mic</span><span class="s2">()</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Opening reminder setup window.&quot;</span><span class="s2">)</span>
+            <span class="s1">open_reminder_window</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">)</span>
+
+        <span class="s0">elif </span><span class="s4">&quot;video call&quot; </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">:</span>
+            <span class="s1">stop_main_mic</span><span class="s2">()</span>
+            <span class="s1">video_call_link </span><span class="s2">= </span><span class="s1">generate_meeting_link</span><span class="s2">()</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: Starting a video call. Here is your link: </span><span class="s0">{</span><span class="s1">video_call_link</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s1">webbrowser</span><span class="s2">.</span><span class="s1">open</span><span class="s2">(</span><span class="s1">video_call_link</span><span class="s2">)</span>
+            <span class="s1">start_captioning</span><span class="s2">(</span><span class="s1">root</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s1">any</span><span class="s2">(</span><span class="s1">word </span><span class="s0">in </span><span class="s1">query_lower</span><span class="s2">.</span><span class="s1">split</span><span class="s2">() </span><span class="s0">for </span><span class="s1">word </span><span class="s0">in </span><span class="s2">[</span><span class="s4">&quot;what&quot;</span><span class="s2">, </span><span class="s4">&quot;when&quot;</span><span class="s2">, </span><span class="s4">&quot;where&quot;</span><span class="s2">, </span><span class="s4">&quot;why&quot;</span><span class="s2">, </span><span class="s4">&quot;how&quot;</span><span class="s2">, </span><span class="s4">&quot;who&quot;</span><span class="s2">]):</span>
+            <span class="s3"># Google Search for informational questions</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: Searching Google for '</span><span class="s0">{</span><span class="s1">query</span><span class="s0">}</span><span class="s4">'.&quot;</span><span class="s2">)</span>
+            <span class="s1">assist </span><span class="s2">= </span><span class="s1">infow</span><span class="s2">()</span>
+            <span class="s1">search_results </span><span class="s2">= </span><span class="s1">assist</span><span class="s2">.</span><span class="s1">search_google</span><span class="s2">(</span><span class="s1">query</span><span class="s2">)</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">search_results</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s1">any</span><span class="s2">(</span><span class="s1">word </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">for </span><span class="s1">word </span><span class="s0">in </span><span class="s2">[</span><span class="s4">&quot;time&quot;</span><span class="s2">, </span><span class="s4">&quot;date&quot;</span><span class="s2">]):</span>
+            <span class="s1">current_time_and_date </span><span class="s2">= </span><span class="s1">tell_time_and_date</span><span class="s2">()</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">current_time_and_date</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+        <span class="s0">elif </span><span class="s1">any</span><span class="s2">(</span><span class="s1">word </span><span class="s0">in </span><span class="s1">query_lower </span><span class="s0">for </span><span class="s1">word </span><span class="s0">in </span><span class="s2">[</span><span class="s4">&quot;exit&quot;</span><span class="s2">, </span><span class="s4">&quot;stop&quot;</span><span class="s2">, </span><span class="s4">&quot;quit&quot;</span><span class="s2">, </span><span class="s4">&quot;no&quot;</span><span class="s2">, </span><span class="s4">&quot;goodbye&quot;</span><span class="s2">, </span><span class="s4">&quot;thank you&quot;</span><span class="s2">]):</span>
+            <span class="s1">goodbye_prompt </span><span class="s2">= </span><span class="s4">&quot;Okay, thank you! Goodbye!&quot;</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">goodbye_prompt</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s0">break  </span><span class="s3"># Exit the loop and end the program</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s3"># Unrecognized command fallback</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Sorry, I didn't catch that. Can you please repeat?&quot;</span><span class="s2">)</span>
+
+        <span class="s3"># Prompt for further assistance and wait for new input</span>
+        <span class="s1">follow_up_prompt </span><span class="s2">= </span><span class="s4">&quot;Is there anything else I can help you with?&quot;</span>
+        <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">follow_up_prompt</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+
+        <span class="s3"># Wait for next input; reset user_input to avoid reuse</span>
+        <span class="s1">user_input </span><span class="s2">= </span><span class="s0">None</span>
+
+<span class="s0">def </span><span class="s1">open_voice_to_text_window</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">start_recording</span><span class="s2">():</span>
+        <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Listening...&quot;</span><span class="s2">)</span>
+        <span class="s0">try</span><span class="s2">:</span>
+            <span class="s0">with </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Microphone</span><span class="s2">() </span><span class="s0">as </span><span class="s1">source</span><span class="s2">:</span>
+                <span class="s1">r</span><span class="s2">.</span><span class="s1">adjust_for_ambient_noise</span><span class="s2">(</span><span class="s1">source</span><span class="s2">)</span>
+                <span class="s1">audio </span><span class="s2">= </span><span class="s1">r</span><span class="s2">.</span><span class="s1">listen</span><span class="s2">(</span><span class="s1">source</span><span class="s2">)</span>
+                <span class="s1">text </span><span class="s2">= </span><span class="s1">r</span><span class="s2">.</span><span class="s1">recognize_google</span><span class="s2">(</span><span class="s1">audio</span><span class="s2">)</span>
+                <span class="s1">text_box</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s1">text </span><span class="s2">+ </span><span class="s4">&quot;</span><span class="s0">\n</span><span class="s4">&quot;</span><span class="s2">)</span>
+                <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: Recognized text - </span><span class="s0">{</span><span class="s1">text</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+        <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">UnknownValueError</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Sorry, I could not understand the audio.&quot;</span><span class="s2">)</span>
+        <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">RequestError</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Sorry, there was an error with the speech recognition service.&quot;</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">close_window</span><span class="s2">():</span>
+        <span class="s1">window</span><span class="s2">.</span><span class="s1">destroy</span><span class="s2">()</span>
+
+    <span class="s1">window </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Tk</span><span class="s2">()</span>
+    <span class="s1">window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Voice to Text&quot;</span><span class="s2">)</span>
+
+    <span class="s1">text_box </span><span class="s2">= </span><span class="s1">scrolledtext</span><span class="s2">.</span><span class="s1">ScrolledText</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">wrap</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">WORD</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">60</span><span class="s2">, </span><span class="s1">height</span><span class="s2">=</span><span class="s5">30</span><span class="s2">)</span>
+    <span class="s1">text_box</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">, </span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s1">speak_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Speak&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">start_recording</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">'green'</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">'white'</span><span class="s2">)</span>
+    <span class="s1">speak_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">padx</span><span class="s2">=</span><span class="s5">5</span><span class="s2">, </span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">close_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Close&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">close_window</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">'red'</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">'white'</span><span class="s2">)</span>
+    <span class="s1">close_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">padx</span><span class="s2">=</span><span class="s5">5</span><span class="s2">, </span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">window</span><span class="s2">.</span><span class="s1">mainloop</span><span class="s2">()</span>
+
+
+<span class="s0">def </span><span class="s1">open_translation_window</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">translate_text</span><span class="s2">():</span>
+        <span class="s1">text_to_translate </span><span class="s2">= </span><span class="s1">text_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+        <span class="s1">target_lang </span><span class="s2">= </span><span class="s1">lang_var</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+
+        <span class="s0">if </span><span class="s1">text_to_translate </span><span class="s0">and </span><span class="s1">target_lang</span><span class="s2">:</span>
+            <span class="s1">translation </span><span class="s2">= </span><span class="s1">perform_translation</span><span class="s2">(</span><span class="s1">text_to_translate</span><span class="s2">, </span><span class="s1">target_lang</span><span class="s2">)</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: Translation - </span><span class="s0">{</span><span class="s1">translation</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s1">result_label</span><span class="s2">.</span><span class="s1">config</span><span class="s2">(</span><span class="s1">text</span><span class="s2">=</span><span class="s4">f&quot;Translated Text: </span><span class="s0">{</span><span class="s1">translation</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Please enter text and select a language.&quot;</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">use_mic</span><span class="s2">():</span>
+        <span class="s1">text_entry</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">)</span>
+        <span class="s1">text_entry</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">recognize_speech</span><span class="s2">())  </span><span class="s3"># Assume recognize_speech() fetches voice input</span>
+
+    <span class="s3"># Translation input window</span>
+    <span class="s1">translation_window </span><span class="s2">= </span><span class="s1">Toplevel</span><span class="s2">()</span>
+    <span class="s1">translation_window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Translate Text&quot;</span><span class="s2">)</span>
+    <span class="s1">translation_window</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">(</span><span class="s4">&quot;350x300&quot;</span><span class="s2">)</span>
+    <span class="s1">translation_window</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#d1e7dd&quot;</span><span class="s2">)  </span><span class="s3"># Soft green background</span>
+
+    <span class="s1">Label</span><span class="s2">(</span><span class="s1">translation_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Enter text to translate:&quot;</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#d1e7dd&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">)).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+    <span class="s1">text_entry </span><span class="s2">= </span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">translation_window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">30</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">))</span>
+    <span class="s1">text_entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s3"># Mic button for voice input</span>
+    <span class="s1">mic_image </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">open</span><span class="s2">(</span><span class="s4">&quot;C:/Users/Kishore/Desktop/Projects/HCI/pythonProject1/photos/mic.png&quot;</span><span class="s2">)  </span><span class="s3"># Ensure correct path to microphone icon</span>
+    <span class="s1">mic_image </span><span class="s2">= </span><span class="s1">mic_image</span><span class="s2">.</span><span class="s1">resize</span><span class="s2">((</span><span class="s5">24</span><span class="s2">, </span><span class="s5">24</span><span class="s2">), </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">LANCZOS</span><span class="s2">)</span>
+    <span class="s1">mic_icon </span><span class="s2">= </span><span class="s1">ImageTk</span><span class="s2">.</span><span class="s1">PhotoImage</span><span class="s2">(</span><span class="s1">mic_image</span><span class="s2">)</span>
+
+    <span class="s1">mic_button </span><span class="s2">= </span><span class="s1">Button</span><span class="s2">(</span><span class="s1">translation_window</span><span class="s2">, </span><span class="s1">image</span><span class="s2">=</span><span class="s1">mic_icon</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">use_mic</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#0d6efd&quot;</span><span class="s2">, </span><span class="s1">borderwidth</span><span class="s2">=</span><span class="s5">0</span><span class="s2">,</span>
+                        <span class="s1">activebackground</span><span class="s2">=</span><span class="s4">&quot;#0b5ed7&quot;</span><span class="s2">)</span>
+    <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">mic_icon</span>
+    <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s3"># Dropdown for language selection</span>
+    <span class="s1">Label</span><span class="s2">(</span><span class="s1">translation_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Select language:&quot;</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#d1e7dd&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">)).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+    <span class="s1">lang_var </span><span class="s2">= </span><span class="s1">StringVar</span><span class="s2">()</span>
+    <span class="s1">lang_var</span><span class="s2">.</span><span class="s1">set</span><span class="s2">(</span><span class="s4">&quot;தமிழ்&quot;</span><span class="s2">)  </span><span class="s3"># Default language தமிழ்</span>
+    <span class="s1">lang_options </span><span class="s2">= [</span><span class="s4">&quot;Spanish&quot;</span><span class="s2">, </span><span class="s4">&quot;French&quot;</span><span class="s2">,</span><span class="s4">&quot;தமிழ்&quot;</span><span class="s2">,</span><span class="s4">&quot;Chinese&quot;</span><span class="s2">, </span><span class="s4">&quot;Japanese&quot;</span><span class="s2">]  </span><span class="s3"># Add language codes as needed</span>
+    <span class="s1">lang_menu </span><span class="s2">= </span><span class="s1">OptionMenu</span><span class="s2">(</span><span class="s1">translation_window</span><span class="s2">, </span><span class="s1">lang_var</span><span class="s2">, *</span><span class="s1">lang_options</span><span class="s2">)</span>
+    <span class="s1">lang_menu</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s3"># Translate button</span>
+    <span class="s1">Button</span><span class="s2">(</span><span class="s1">translation_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Translate&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">translate_text</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#0d6efd&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">,</span>
+           <span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">, </span><span class="s4">&quot;bold&quot;</span><span class="s2">), </span><span class="s1">activebackground</span><span class="s2">=</span><span class="s4">&quot;#0b5ed7&quot;</span><span class="s2">, </span><span class="s1">activeforeground</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">15</span><span class="s2">)</span>
+
+    <span class="s3"># Label to show translation result</span>
+    <span class="s1">result_label </span><span class="s2">= </span><span class="s1">Label</span><span class="s2">(</span><span class="s1">translation_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Translated Text:&quot;</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#d1e7dd&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">, </span><span class="s4">&quot;italic&quot;</span><span class="s2">))</span>
+    <span class="s1">result_label</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+
+<span class="s0">def </span><span class="s1">perform_translation</span><span class="s2">(</span><span class="s1">text</span><span class="s2">, </span><span class="s1">dest_lang</span><span class="s2">):</span>
+    <span class="s1">translator </span><span class="s2">= </span><span class="s1">Translator</span><span class="s2">()</span>
+    <span class="s0">try</span><span class="s2">:</span>
+        <span class="s1">result </span><span class="s2">= </span><span class="s1">translator</span><span class="s2">.</span><span class="s1">translate</span><span class="s2">(</span><span class="s1">text</span><span class="s2">, </span><span class="s1">dest</span><span class="s2">=</span><span class="s1">dest_lang</span><span class="s2">)</span>
+        <span class="s0">return </span><span class="s1">result</span><span class="s2">.</span><span class="s1">text</span>
+    <span class="s0">except </span><span class="s1">Exception </span><span class="s0">as </span><span class="s1">e</span><span class="s2">:</span>
+        <span class="s0">return </span><span class="s4">f&quot;Error in translation: </span><span class="s0">{</span><span class="s1">e</span><span class="s0">}</span><span class="s4">&quot;</span>
+
+
+<span class="s0">def </span><span class="s1">open_reminder_window</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">set_reminder</span><span class="s2">():</span>
+        <span class="s1">reminder_text </span><span class="s2">= </span><span class="s1">reminder_name_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+        <span class="s1">reminder_date </span><span class="s2">= </span><span class="s1">reminder_date_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+        <span class="s1">reminder_time </span><span class="s2">= </span><span class="s1">reminder_time_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+
+        <span class="s0">if </span><span class="s1">reminder_text </span><span class="s0">and </span><span class="s1">reminder_date </span><span class="s0">and </span><span class="s1">reminder_time</span><span class="s2">:</span>
+            <span class="s1">reminder_datetime_str </span><span class="s2">= </span><span class="s4">f&quot;</span><span class="s0">{</span><span class="s1">reminder_date</span><span class="s0">} {</span><span class="s1">reminder_time</span><span class="s0">}</span><span class="s4">&quot;</span>
+            <span class="s1">set_reminder_task</span><span class="s2">(</span><span class="s1">reminder_text</span><span class="s2">, </span><span class="s1">reminder_datetime_str</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">)</span>
+            <span class="s1">reminder_window</span><span class="s2">.</span><span class="s1">destroy</span><span class="s2">()</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Please fill out all fields.&quot;</span><span class="s2">)</span>
+
+    <span class="s3"># Create reminder input window</span>
+    <span class="s1">reminder_window </span><span class="s2">= </span><span class="s1">Toplevel</span><span class="s2">()</span>
+    <span class="s1">reminder_window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Set Reminder&quot;</span><span class="s2">)</span>
+    <span class="s1">reminder_window</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">(</span><span class="s4">&quot;350x250&quot;</span><span class="s2">)</span>
+    <span class="s1">reminder_window</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#ffebcd&quot;</span><span class="s2">)  </span><span class="s3"># Light background color</span>
+
+    <span class="s1">Label</span><span class="s2">(</span><span class="s1">reminder_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Reminder Name:&quot;</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#ffebcd&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">)).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+    <span class="s1">reminder_name_entry </span><span class="s2">= </span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">reminder_window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">30</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">))</span>
+    <span class="s1">reminder_name_entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">Label</span><span class="s2">(</span><span class="s1">reminder_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Date (YYYY-MM-DD):&quot;</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#ffebcd&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">)).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+    <span class="s1">reminder_date_entry </span><span class="s2">= </span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">reminder_window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">30</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">))</span>
+    <span class="s1">reminder_date_entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">Label</span><span class="s2">(</span><span class="s1">reminder_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Time (HH:MM):&quot;</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#ffebcd&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">)).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+    <span class="s1">reminder_time_entry </span><span class="s2">= </span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">reminder_window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">30</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">))</span>
+    <span class="s1">reminder_time_entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+
+    <span class="s1">Button</span><span class="s2">(</span><span class="s1">reminder_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Set Reminder&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">set_reminder</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#ff6347&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">,</span>
+           <span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">, </span><span class="s4">&quot;bold&quot;</span><span class="s2">), </span><span class="s1">activebackground</span><span class="s2">=</span><span class="s4">&quot;#cd5c5c&quot;</span><span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">20</span><span class="s2">)</span>
+
+
+<span class="s0">def </span><span class="s1">set_reminder_task</span><span class="s2">(</span><span class="s1">reminder_text</span><span class="s2">, </span><span class="s1">reminder_datetime_str</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">reminder_task</span><span class="s2">():</span>
+        <span class="s1">delay </span><span class="s2">= (</span><span class="s1">reminder_datetime </span><span class="s2">- </span><span class="s1">datetime</span><span class="s2">.</span><span class="s1">now</span><span class="s2">()).</span><span class="s1">total_seconds</span><span class="s2">()</span>
+        <span class="s0">if </span><span class="s1">delay </span><span class="s2">&gt; </span><span class="s5">0</span><span class="s2">:</span>
+            <span class="s1">threading</span><span class="s2">.</span><span class="s1">Timer</span><span class="s2">(</span><span class="s1">delay</span><span class="s2">, </span><span class="s1">show_reminder</span><span class="s2">, [</span><span class="s1">reminder_text</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">]).</span><span class="s1">start</span><span class="s2">()</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: Reminder set for </span><span class="s0">{</span><span class="s1">reminder_datetime_str</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Reminder time is in the past. Enter a future time.&quot;</span><span class="s2">)</span>
+
+    <span class="s1">reminder_datetime </span><span class="s2">= </span><span class="s1">datetime</span><span class="s2">.</span><span class="s1">strptime</span><span class="s2">(</span><span class="s1">reminder_datetime_str</span><span class="s2">, </span><span class="s4">&quot;%Y-%m-%d %H:%M&quot;</span><span class="s2">)</span>
+    <span class="s1">reminder_task</span><span class="s2">()</span>
+
+
+<span class="s0">def </span><span class="s1">show_reminder</span><span class="s2">(</span><span class="s1">reminder_text</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">):</span>
+    <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: Reminder - </span><span class="s0">{</span><span class="s1">reminder_text</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+    <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showinfo</span><span class="s2">(</span><span class="s4">&quot;Reminder&quot;</span><span class="s2">, </span><span class="s1">reminder_text</span><span class="s2">)  </span><span class="s3"># Display popup alert</span>
+
+<span class="s0">def </span><span class="s1">open_weather_window</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">):</span>
+    <span class="s0">def </span><span class="s1">get_weather</span><span class="s2">():</span>
+        <span class="s1">location </span><span class="s2">= </span><span class="s1">location_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+        <span class="s0">if </span><span class="s1">location</span><span class="s2">:</span>
+            <span class="s1">weather_info </span><span class="s2">= </span><span class="s1">selenium_w</span><span class="s2">.</span><span class="s1">infow</span><span class="s2">.</span><span class="s1">fetch_weather</span><span class="s2">(</span><span class="s1">city</span><span class="s2">=</span><span class="s1">location</span><span class="s2">)</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">weather_info</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s1">weather_window</span><span class="s2">.</span><span class="s1">destroy</span><span class="s2">()</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Please enter a location.&quot;</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">use_mic</span><span class="s2">():</span>
+        <span class="s3"># Placeholder for mic input functionality</span>
+        <span class="s1">location_entry</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">)</span>
+        <span class="s1">location_entry</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">recognize_speech</span><span class="s2">())  </span><span class="s3"># Assume recognize_speech() fetches voice input</span>
+
+    <span class="s3"># Create a new top-level window for location input</span>
+    <span class="s1">weather_window </span><span class="s2">= </span><span class="s1">Toplevel</span><span class="s2">()</span>
+    <span class="s1">weather_window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Weather Information&quot;</span><span class="s2">)</span>
+    <span class="s1">weather_window</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">(</span><span class="s4">&quot;320x250&quot;</span><span class="s2">)</span>
+    <span class="s1">weather_window</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#e0f7fa&quot;</span><span class="s2">)  </span><span class="s3"># Light blue background</span>
+
+    <span class="s3"># Add label for instructions</span>
+    <span class="s1">Label</span><span class="s2">(</span>
+        <span class="s1">weather_window</span><span class="s2">,</span>
+        <span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Enter location for weather:&quot;</span><span class="s2">,</span>
+        <span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#e0f7fa&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;#00796b&quot;</span><span class="s2">,</span>
+        <span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">12</span><span class="s2">, </span><span class="s4">&quot;bold&quot;</span><span class="s2">)</span>
+    <span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=(</span><span class="s5">15</span><span class="s2">, </span><span class="s5">5</span><span class="s2">))</span>
+
+    <span class="s3"># Entry widget for location</span>
+    <span class="s1">location_entry </span><span class="s2">= </span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">weather_window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">30</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">12</span><span class="s2">))</span>
+    <span class="s1">location_entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s3"># Add microphone button</span>
+    <span class="s0">try</span><span class="s2">:</span>
+        <span class="s1">mic_image </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">open</span><span class="s2">(</span><span class="s4">&quot;C:/Users/Kishore/Desktop/Projects/HCI/pythonProject1/photos/mic.png&quot;</span><span class="s2">)  </span><span class="s3"># Path to mic icon</span>
+        <span class="s1">mic_image </span><span class="s2">= </span><span class="s1">mic_image</span><span class="s2">.</span><span class="s1">resize</span><span class="s2">((</span><span class="s5">24</span><span class="s2">, </span><span class="s5">24</span><span class="s2">), </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">LANCZOS</span><span class="s2">)  </span><span class="s3"># Updated to LANCZOS</span>
+        <span class="s1">mic_icon </span><span class="s2">= </span><span class="s1">ImageTk</span><span class="s2">.</span><span class="s1">PhotoImage</span><span class="s2">(</span><span class="s1">mic_image</span><span class="s2">)</span>
+
+        <span class="s1">mic_button </span><span class="s2">= </span><span class="s1">Button</span><span class="s2">(</span>
+            <span class="s1">weather_window</span><span class="s2">, </span><span class="s1">image</span><span class="s2">=</span><span class="s1">mic_icon</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">use_mic</span><span class="s2">,</span>
+            <span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#00796b&quot;</span><span class="s2">, </span><span class="s1">borderwidth</span><span class="s2">=</span><span class="s5">0</span><span class="s2">, </span><span class="s1">activebackground</span><span class="s2">=</span><span class="s4">&quot;#004d40&quot;</span>
+        <span class="s2">)</span>
+        <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">mic_icon  </span><span class="s3"># Reference to avoid garbage collection</span>
+        <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span><span class="s2">)</span>
+    <span class="s0">except </span><span class="s1">FileNotFoundError</span><span class="s2">:</span>
+        <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Microphone icon image not found. Please provide a valid path.&quot;</span><span class="s2">)</span>
+
+    <span class="s3"># Button to fetch weather</span>
+    <span class="s1">Button</span><span class="s2">(</span>
+        <span class="s1">weather_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Get Weather&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">get_weather</span><span class="s2">,</span>
+        <span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#00796b&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Arial&quot;</span><span class="s2">, </span><span class="s5">10</span><span class="s2">, </span><span class="s4">&quot;bold&quot;</span><span class="s2">),</span>
+        <span class="s1">activebackground</span><span class="s2">=</span><span class="s4">&quot;#004d40&quot;</span><span class="s2">, </span><span class="s1">activeforeground</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">,</span>
+        <span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">, </span><span class="s1">pady</span><span class="s2">=</span><span class="s5">5</span>
+    <span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">15</span><span class="s2">)</span>
+
+
+
+
+<span class="s0">def </span><span class="s1">main</span><span class="s2">(</span><span class="s1">update_ui_callback</span><span class="s2">,</span><span class="s1">stop_main_mic</span><span class="s2">,</span><span class="s1">user_input</span><span class="s2">):</span>
+    <span class="s0">global </span><span class="s1">r</span>
+    <span class="s1">r </span><span class="s2">= </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Recognizer</span><span class="s2">()</span>
+
+    <span class="s1">intro_prompt </span><span class="s2">= </span><span class="s4">&quot;I am Nova, your voice assistant. What can I do for you?&quot;</span>
+    <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">intro_prompt</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+    <span class="s1">update_ui_callback</span><span class="s2">(</span><span class="s4">&quot;Nova: Listening...&quot;</span><span class="s2">)</span>
+    <span class="s0">while True</span><span class="s2">:</span>
+        <span class="s1">exit_program </span><span class="s2">= </span><span class="s1">handle_task</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">update_ui_callback</span><span class="s2">,</span><span class="s1">stop_main_mic</span><span class="s2">,</span><span class="s1">user_input</span><span class="s2">)</span>
+        <span class="s0">if </span><span class="s1">exit_program</span><span class="s2">:</span>
+            <span class="s0">break</span>
+
+
+
+
+<span class="s0">class </span><span class="s1">VoiceAssistantApp</span><span class="s2">:</span>
+    <span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">root</span><span class="s2">):</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">root </span><span class="s2">= </span><span class="s1">root</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">r </span><span class="s2">= </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Recognizer</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">is_mic_on </span><span class="s2">= </span><span class="s0">True</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Voice Assistant&quot;</span><span class="s2">)</span>
+
+        <span class="s3"># Initialize text-to-speech engine</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">engine </span><span class="s2">= </span><span class="s1">pyttsx3</span><span class="s2">.</span><span class="s1">init</span><span class="s2">()</span>
+
+        <span class="s3"># Hide the main window and show login window first</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">withdraw</span><span class="s2">()</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">show_login_window</span><span class="s2">()</span>
+
+
+
+    <span class="s0">def </span><span class="s1">show_login_window</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s3"># Create the login window</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">login_window </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Toplevel</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Login&quot;</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">(</span><span class="s4">&quot;800x600&quot;</span><span class="s2">)</span>
+
+        <span class="s3"># Set background color for the login window</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#FADA5E&quot;</span><span class="s2">)  </span><span class="s3"># yellow background</span>
+
+        <span class="s3"># Center the login window on the screen</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">center_window</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">, </span><span class="s5">800</span><span class="s2">, </span><span class="s5">600</span><span class="s2">)</span>
+
+        <span class="s1">tk</span><span class="s2">.</span><span class="s1">Label</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Username:&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">), </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#f0f0f5&quot;</span><span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">25</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">username_entry </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">))</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">username_entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+        <span class="s1">tk</span><span class="s2">.</span><span class="s1">Label</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Enter Password:&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">), </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#f0f0f5&quot;</span><span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">25</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">password_entry </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">, </span><span class="s1">show</span><span class="s2">=</span><span class="s4">'*'</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">))</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">password_entry</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+        <span class="s1">button_frame </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Frame</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#f0f0f5&quot;</span><span class="s2">)</span>
+        <span class="s1">button_frame</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">pady</span><span class="s2">=</span><span class="s5">20</span><span class="s2">)</span>
+
+        <span class="s3"># Microphone button with color</span>
+        <span class="s1">mic_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">button_frame</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;🎤&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">start_voice_input</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">),</span>
+                               <span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#4CAF50&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">)</span>
+        <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s4">&quot;left&quot;</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+        <span class="s3"># Sign In and Sign Up buttons with color</span>
+        <span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">button_frame</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Sign In&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">sign_in</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">), </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#2196F3&quot;</span><span class="s2">,</span>
+                  <span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s4">&quot;left&quot;</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+        <span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">button_frame</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;Sign Up&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">sign_up</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">), </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#FF5722&quot;</span><span class="s2">,</span>
+                  <span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">).</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s4">&quot;right&quot;</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">center_window</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">window</span><span class="s2">, </span><span class="s1">width</span><span class="s2">, </span><span class="s1">height</span><span class="s2">):</span>
+        <span class="s1">screen_width </span><span class="s2">= </span><span class="s1">window</span><span class="s2">.</span><span class="s1">winfo_screenwidth</span><span class="s2">()</span>
+        <span class="s1">screen_height </span><span class="s2">= </span><span class="s1">window</span><span class="s2">.</span><span class="s1">winfo_screenheight</span><span class="s2">()</span>
+        <span class="s1">x </span><span class="s2">= (</span><span class="s1">screen_width </span><span class="s2">/ </span><span class="s5">2</span><span class="s2">) - (</span><span class="s1">width </span><span class="s2">/ </span><span class="s5">2</span><span class="s2">)</span>
+        <span class="s1">y </span><span class="s2">= (</span><span class="s1">screen_height </span><span class="s2">/ </span><span class="s5">2</span><span class="s2">) - (</span><span class="s1">height </span><span class="s2">/ </span><span class="s5">2</span><span class="s2">)</span>
+        <span class="s1">window</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">(</span><span class="s4">f'</span><span class="s0">{</span><span class="s1">width</span><span class="s0">}</span><span class="s4">x</span><span class="s0">{</span><span class="s1">height</span><span class="s0">}</span><span class="s4">+</span><span class="s0">{</span><span class="s1">int</span><span class="s2">(</span><span class="s1">x</span><span class="s2">)</span><span class="s0">}</span><span class="s4">+</span><span class="s0">{</span><span class="s1">int</span><span class="s2">(</span><span class="s1">y</span><span class="s2">)</span><span class="s0">}</span><span class="s4">'</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">start_voice_input</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">self</span><span class="s2">.</span><span class="s1">is_mic_on</span><span class="s2">:</span>
+            <span class="s3"># Run the microphone listening process if mic is on</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">&quot;Nova: Listening for your command...&quot;</span><span class="s2">)</span>
+            <span class="s1">threading</span><span class="s2">.</span><span class="s1">Thread</span><span class="s2">(</span><span class="s1">target</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">listen_for_command</span><span class="s2">).</span><span class="s1">start</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">listen_for_command</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+
+        <span class="s3"># Initialize the recognizer</span>
+        <span class="s1">r </span><span class="s2">= </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Recognizer</span><span class="s2">()</span>
+
+        <span class="s0">with </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Microphone</span><span class="s2">() </span><span class="s0">as </span><span class="s1">source</span><span class="s2">:</span>
+            <span class="s1">r</span><span class="s2">.</span><span class="s1">adjust_for_ambient_noise</span><span class="s2">(</span><span class="s1">source</span><span class="s2">)  </span><span class="s3"># Adjust for ambient noise</span>
+            <span class="s1">audio </span><span class="s2">= </span><span class="s1">r</span><span class="s2">.</span><span class="s1">listen</span><span class="s2">(</span><span class="s1">source</span><span class="s2">)  </span><span class="s3"># Listen for the user's command</span>
+            <span class="s0">try</span><span class="s2">:</span>
+                <span class="s1">command </span><span class="s2">= </span><span class="s1">r</span><span class="s2">.</span><span class="s1">recognize_google</span><span class="s2">(</span><span class="s1">audio</span><span class="s2">)  </span><span class="s3"># Convert speech to text</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">f&quot;User: </span><span class="s0">{</span><span class="s1">command</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">process_input</span><span class="s2">(</span><span class="s1">command</span><span class="s2">)  </span><span class="s3"># Process the recognized command</span>
+            <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">UnknownValueError</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">&quot;Nova: Could not understand audio.&quot;</span><span class="s2">)</span>
+            <span class="s0">except </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">RequestError</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">&quot;Nova: Could not request results; check your network connection.&quot;</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">stop_main_mic</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s3"># Set the mic control variable to False to stop listening</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">is_mic_on </span><span class="s2">= </span><span class="s0">False</span>
+
+    <span class="s0">def </span><span class="s1">sign_in</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">username </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">username_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+        <span class="s1">password </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">password_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+
+        <span class="s0">if </span><span class="s1">username </span><span class="s0">in </span><span class="s1">users_db </span><span class="s0">and </span><span class="s1">users_db</span><span class="s2">[</span><span class="s1">username</span><span class="s2">] == </span><span class="s1">password</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">login_window</span><span class="s2">.</span><span class="s1">destroy</span><span class="s2">()</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">deiconify</span><span class="s2">()  </span><span class="s3"># Show the main window</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">setup_main_window</span><span class="s2">()</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showerror</span><span class="s2">(</span><span class="s4">&quot;Login Error&quot;</span><span class="s2">, </span><span class="s4">&quot;Invalid username or password.&quot;</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">sign_up</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s1">username </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">username_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+        <span class="s1">password </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">password_entry</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+
+        <span class="s0">if </span><span class="s1">username </span><span class="s0">in </span><span class="s1">users_db</span><span class="s2">:</span>
+            <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showerror</span><span class="s2">(</span><span class="s4">&quot;Sign Up Error&quot;</span><span class="s2">, </span><span class="s4">&quot;Username already exists.&quot;</span><span class="s2">)</span>
+        <span class="s0">else</span><span class="s2">:</span>
+            <span class="s1">users_db</span><span class="s2">[</span><span class="s1">username</span><span class="s2">] = </span><span class="s1">password</span>
+            <span class="s1">messagebox</span><span class="s2">.</span><span class="s1">showinfo</span><span class="s2">(</span><span class="s4">&quot;Sign Up Success&quot;</span><span class="s2">, </span><span class="s4">&quot;Account created successfully. You can now sign in.&quot;</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">setup_main_window</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s3"># Set the window to be full-screen, which will fit a 15-inch laptop</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">(</span><span class="s4">f&quot;</span><span class="s0">{</span><span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">winfo_screenwidth</span><span class="s2">()</span><span class="s0">}</span><span class="s4">x</span><span class="s0">{</span><span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">winfo_screenheight</span><span class="s2">()</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+
+        <span class="s3"># Set background color for the main window</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#e6e6ff&quot;</span><span class="s2">)  </span><span class="s3"># Light lavender background</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">&quot;Nova: Hello, I am Nova, your voice assistant. What can I do for you?&quot;</span><span class="s2">)</span>
+
+        <span class="s3"># Start the assistant in a new thread</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">start_assistant</span><span class="s2">()</span>
+        <span class="s3"># Set up GUI components</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">setup_gui</span><span class="s2">()</span>
+        <span class="s3">#self.start_assistant()</span>
+
+    <span class="s0">def </span><span class="s1">submit_input</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s3"># Get the user input from the input box</span>
+        <span class="s1">user_input </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">user_input_box</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+
+        <span class="s0">if </span><span class="s1">user_input</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">f&quot;User: </span><span class="s0">{</span><span class="s1">user_input</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">user_input_box</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(</span><span class="s5">0</span><span class="s2">, </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">)  </span><span class="s3"># Clear the input box</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">process_input</span><span class="s2">(</span><span class="s1">user_input</span><span class="s2">)  </span><span class="s3"># Process the input</span>
+
+    <span class="s0">def </span><span class="s1">process_input</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">user_input</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">user_input</span><span class="s2">:</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">f&quot;User: </span><span class="s0">{</span><span class="s1">user_input</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)  </span><span class="s3"># Display the user input once</span>
+            <span class="s1">exit_program </span><span class="s2">= </span><span class="s1">handle_task</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">r</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">,</span><span class="s1">self</span><span class="s2">.</span><span class="s1">stop_main_mic</span><span class="s2">, </span><span class="s1">user_input</span><span class="s2">)  </span><span class="s3"># Call handle_task once</span>
+
+            <span class="s0">if </span><span class="s1">exit_program</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">.</span><span class="s1">quit</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">setup_gui</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s3"># Load images</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">ellie_image_path </span><span class="s2">= </span><span class="s4">&quot;C:/Users/Kishore/Desktop/Projects/HCI/pythonProject1/photos/nova.jfif&quot;  </span><span class="s3"># Change this path to your Ellie's image path</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">user_image_path </span><span class="s2">= </span><span class="s4">&quot;C:/Users/Kishore/Desktop/Projects/HCI/pythonProject1/photos/user.png&quot;  </span><span class="s3"># Change this path to your user's image path</span>
+
+        <span class="s3"># Set Ellie's voice to female</span>
+        <span class="s1">voices </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">engine</span><span class="s2">.</span><span class="s1">getProperty</span><span class="s2">(</span><span class="s4">'voices'</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">engine</span><span class="s2">.</span><span class="s1">setProperty</span><span class="s2">(</span><span class="s4">'voice'</span><span class="s2">, </span><span class="s1">voices</span><span class="s2">[</span><span class="s5">1</span><span class="s2">].</span><span class="s1">id</span><span class="s2">)</span>
+
+        <span class="s3"># Load images</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">ellie_image </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">load_image</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">ellie_image_path</span><span class="s2">, (</span><span class="s5">50</span><span class="s2">, </span><span class="s5">50</span><span class="s2">))</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">user_image </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">load_image</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">user_image_path</span><span class="s2">, (</span><span class="s5">50</span><span class="s2">, </span><span class="s5">50</span><span class="s2">))</span>
+
+        <span class="s3"># Set up text box for conversation</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Text</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">, </span><span class="s1">wrap</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">WORD</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;black&quot;</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">12</span><span class="s2">))</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">place</span><span class="s2">(</span><span class="s1">relx</span><span class="s2">=</span><span class="s5">0.5</span><span class="s2">, </span><span class="s1">rely</span><span class="s2">=</span><span class="s5">0.4</span><span class="s2">, </span><span class="s1">anchor</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">800</span><span class="s2">, </span><span class="s1">height</span><span class="s2">=</span><span class="s5">650</span><span class="s2">)</span>
+
+        <span class="s3"># Set up tags for the text box</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">tag_configure</span><span class="s2">(</span><span class="s4">&quot;Nova&quot;</span><span class="s2">, </span><span class="s1">foreground</span><span class="s2">=</span><span class="s4">&quot;blue&quot;</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">tag_configure</span><span class="s2">(</span><span class="s4">&quot;user&quot;</span><span class="s2">, </span><span class="s1">foreground</span><span class="s2">=</span><span class="s4">&quot;green&quot;</span><span class="s2">)</span>
+
+        <span class="s3"># Insert initial welcome message</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s4">&quot;Welcome to the Voice Assistant</span><span class="s0">\n</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s4">&quot;Nova&quot;</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">state</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">DISABLED</span><span class="s2">)</span>
+
+        <span class="s3"># Add a frame at the bottom for the input box and microphone button</span>
+        <span class="s1">bottom_frame </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Frame</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">root</span><span class="s2">, </span><span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;lightgray&quot;</span><span class="s2">)</span>
+        <span class="s1">bottom_frame</span><span class="s2">.</span><span class="s1">place</span><span class="s2">(</span><span class="s1">relx</span><span class="s2">=</span><span class="s5">0.5</span><span class="s2">, </span><span class="s1">rely</span><span class="s2">=</span><span class="s5">0.8</span><span class="s2">, </span><span class="s1">anchor</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">, </span><span class="s1">width</span><span class="s2">=</span><span class="s5">800</span><span class="s2">, </span><span class="s1">height</span><span class="s2">=</span><span class="s5">80</span><span class="s2">)</span>
+
+        <span class="s3"># Text box for user input</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">user_input_box </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Entry</span><span class="s2">(</span><span class="s1">bottom_frame</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">), </span><span class="s1">width</span><span class="s2">=</span><span class="s5">50</span><span class="s2">)</span>
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">user_input_box</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">, </span><span class="s1">pady</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+        <span class="s3"># Microphone button for voice input</span>
+        <span class="s1">mic_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">bottom_frame</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;🎤&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">start_voice_input</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">),</span>
+                               <span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#4CAF50&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">)</span>
+        <span class="s1">mic_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+
+        <span class="s3"># Submit button for text input</span>
+        <span class="s1">submit_button </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">(</span><span class="s1">bottom_frame</span><span class="s2">, </span><span class="s1">text</span><span class="s2">=</span><span class="s4">&quot;☑️&quot;</span><span class="s2">, </span><span class="s1">command</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">submit_input</span><span class="s2">, </span><span class="s1">font</span><span class="s2">=(</span><span class="s4">&quot;Helvetica&quot;</span><span class="s2">, </span><span class="s5">14</span><span class="s2">),</span>
+                                  <span class="s1">bg</span><span class="s2">=</span><span class="s4">&quot;#2196F3&quot;</span><span class="s2">, </span><span class="s1">fg</span><span class="s2">=</span><span class="s4">&quot;white&quot;</span><span class="s2">)</span>
+        <span class="s1">submit_button</span><span class="s2">.</span><span class="s1">pack</span><span class="s2">(</span><span class="s1">side</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">, </span><span class="s1">padx</span><span class="s2">=</span><span class="s5">10</span><span class="s2">)</span>
+    <span class="s0">def </span><span class="s1">load_image</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">path</span><span class="s2">, </span><span class="s1">size</span><span class="s2">):</span>
+        <span class="s0">try</span><span class="s2">:</span>
+            <span class="s1">image </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">open</span><span class="s2">(</span><span class="s1">path</span><span class="s2">).</span><span class="s1">convert</span><span class="s2">(</span><span class="s4">&quot;RGBA&quot;</span><span class="s2">)</span>
+            <span class="s1">image </span><span class="s2">= </span><span class="s1">image</span><span class="s2">.</span><span class="s1">resize</span><span class="s2">(</span><span class="s1">size</span><span class="s2">, </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">LANCZOS</span><span class="s2">)</span>
+
+            <span class="s3"># Create a round mask</span>
+            <span class="s1">mask </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">new</span><span class="s2">(</span><span class="s4">'L'</span><span class="s2">, </span><span class="s1">size</span><span class="s2">, </span><span class="s5">0</span><span class="s2">)</span>
+            <span class="s1">draw </span><span class="s2">= </span><span class="s1">ImageDraw</span><span class="s2">.</span><span class="s1">Draw</span><span class="s2">(</span><span class="s1">mask</span><span class="s2">)</span>
+            <span class="s1">draw</span><span class="s2">.</span><span class="s1">ellipse</span><span class="s2">((</span><span class="s5">0</span><span class="s2">, </span><span class="s5">0</span><span class="s2">, </span><span class="s1">size</span><span class="s2">[</span><span class="s5">0</span><span class="s2">], </span><span class="s1">size</span><span class="s2">[</span><span class="s5">1</span><span class="s2">]), </span><span class="s1">fill</span><span class="s2">=</span><span class="s5">255</span><span class="s2">)</span>
+
+            <span class="s3"># Apply the mask to the image</span>
+            <span class="s1">result </span><span class="s2">= </span><span class="s1">Image</span><span class="s2">.</span><span class="s1">new</span><span class="s2">(</span><span class="s4">'RGBA'</span><span class="s2">, </span><span class="s1">size</span><span class="s2">)</span>
+            <span class="s1">result</span><span class="s2">.</span><span class="s1">paste</span><span class="s2">(</span><span class="s1">image</span><span class="s2">, (</span><span class="s5">0</span><span class="s2">, </span><span class="s5">0</span><span class="s2">), </span><span class="s1">mask</span><span class="s2">)</span>
+
+            <span class="s0">return </span><span class="s1">ImageTk</span><span class="s2">.</span><span class="s1">PhotoImage</span><span class="s2">(</span><span class="s1">result</span><span class="s2">)</span>
+        <span class="s0">except </span><span class="s1">Exception </span><span class="s0">as </span><span class="s1">e</span><span class="s2">:</span>
+            <span class="s1">print</span><span class="s2">(</span><span class="s4">f&quot;Error loading image: </span><span class="s0">{</span><span class="s1">e</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+            <span class="s0">return None</span>
+
+    <span class="s0">def </span><span class="s1">update_ui</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">message</span><span class="s2">):</span>
+        <span class="s0">if </span><span class="s1">hasattr</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s4">'text_box'</span><span class="s2">):</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">state</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">NORMAL</span><span class="s2">)</span>
+            <span class="s0">if </span><span class="s1">message</span><span class="s2">.</span><span class="s1">startswith</span><span class="s2">(</span><span class="s4">&quot;Nova:&quot;</span><span class="s2">):</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">image_create</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s1">image</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">ellie_image</span><span class="s2">)  </span><span class="s3"># Insert Ellie's image</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s4">f&quot; </span><span class="s0">{</span><span class="s1">message</span><span class="s0">}\n</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s4">&quot;Nova&quot;</span><span class="s2">)</span>
+            <span class="s0">elif </span><span class="s1">message</span><span class="s2">.</span><span class="s1">startswith</span><span class="s2">(</span><span class="s4">&quot;User:&quot;</span><span class="s2">):</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">image_create</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s1">image</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">user_image</span><span class="s2">)  </span><span class="s3"># Insert User's image</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s4">f&quot; </span><span class="s0">{</span><span class="s1">message</span><span class="s0">}\n</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s4">&quot;user&quot;</span><span class="s2">)</span>
+            <span class="s0">else</span><span class="s2">:</span>
+                <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">, </span><span class="s4">f&quot;</span><span class="s0">{</span><span class="s1">message</span><span class="s0">}\n</span><span class="s4">&quot;</span><span class="s2">, </span><span class="s4">&quot;Nova&quot;</span><span class="s2">)</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">configure</span><span class="s2">(</span><span class="s1">state</span><span class="s2">=</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">DISABLED</span><span class="s2">)</span>
+            <span class="s1">self</span><span class="s2">.</span><span class="s1">text_box</span><span class="s2">.</span><span class="s1">see</span><span class="s2">(</span><span class="s1">tk</span><span class="s2">.</span><span class="s1">END</span><span class="s2">)</span>
+
+    <span class="s0">def </span><span class="s1">start_assistant</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">import </span><span class="s1">threading</span>
+        <span class="s1">threading</span><span class="s2">.</span><span class="s1">Thread</span><span class="s2">(</span><span class="s1">target</span><span class="s2">=</span><span class="s1">self</span><span class="s2">.</span><span class="s1">main</span><span class="s2">).</span><span class="s1">start</span><span class="s2">()</span>
+
+    <span class="s0">def </span><span class="s1">main</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span>
+        <span class="s0">global </span><span class="s1">r</span>
+        <span class="s1">r </span><span class="s2">= </span><span class="s1">sr</span><span class="s2">.</span><span class="s1">Recognizer</span><span class="s2">()</span>
+
+        <span class="s1">intro_prompt </span><span class="s2">= </span><span class="s4">&quot;Hello, I am Nova, your voice assistant. What can I do for you?&quot;</span>
+
+        <span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">(</span><span class="s4">f&quot;Nova: </span><span class="s0">{</span><span class="s1">intro_prompt</span><span class="s0">}</span><span class="s4">&quot;</span><span class="s2">)</span>
+
+        <span class="s0">while True</span><span class="s2">:</span>
+            <span class="s1">exit_program </span><span class="s2">= </span><span class="s1">handle_task</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">update_ui</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">stop_main_mic</span><span class="s2">)</span>
+            <span class="s0">if </span><span class="s1">exit_program</span><span class="s2">:</span>
+                <span class="s0">break</span>
+<span class="s3"># Start the application</span>
+<span class="s0">if </span><span class="s1">__name__ </span><span class="s2">== </span><span class="s4">&quot;__main__&quot;</span><span class="s2">:</span>
+    <span class="s1">root </span><span class="s2">= </span><span class="s1">tk</span><span class="s2">.</span><span class="s1">Tk</span><span class="s2">()</span>
+    <span class="s1">app </span><span class="s2">= </span><span class="s1">VoiceAssistantApp</span><span class="s2">(</span><span class="s1">root</span><span class="s2">)</span>
+    <span class="s1">root</span><span class="s2">.</span><span class="s1">mainloop</span><span class="s2">()</span>
+
+</pre>
+</body>
+</html>
