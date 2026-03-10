@@ -37,7 +37,7 @@ class infow:
             return None
 
     def fetch_weather(city):
-        API_KEY = "7351f70bb4430b23339750725a90bf26"
+        API_KEY = ""
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
         try:
             response = requests.get(url)
@@ -119,8 +119,8 @@ class infow:
     @staticmethod
     def search_google(query):
         # Replace with your actual API key and search engine ID
-        API_KEY = "AIzaSyBB_9I9eWYgKrSUyafgMW4O0EZT2z7pXLg"
-        SEARCH_ENGINE_ID = "51047a76011064371"
+        API_KEY = ""
+        SEARCH_ENGINE_ID = ""
         url = f"https://www.googleapis.com/customsearch/v1?key={API_KEY}&cx={SEARCH_ENGINE_ID}&q={query}"
 
         try:
